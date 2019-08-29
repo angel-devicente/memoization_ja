@@ -26,7 +26,6 @@ int insert(int l1, int l2, int *s1, int *s2, double val, double ****A) {
 	  double **tmp = realloc((*A)[l1],sizeof(double*)*(*s2));
 	  if(tmp) {
 	    (*A)[l1]=tmp;
-	    free(tmp);
 	  } else { // realloc failed
 	    printf("Could not reallocate \n");
 	    return 1;
@@ -59,26 +58,19 @@ int insert(int l1, int l2, int *s1, int *s2, double val, double ****A) {
       double ***tmp = realloc((*A),sizeof(double**)*(*s1));
       if(tmp) {
 	(*A)=tmp;
-	free(tmp);
       } else { // realloc failed
 	printf("Could not reallocate \n");
 	return 1;
       }
 
-      printf("reallocated A\n");
       for(int i=p_s1; i<=l1; i++){
-	printf("Doing for i %d\n",i);
 	if (i == l1) {
 	  *s2 = l2+1;
 	  (*A)[i] = (double **)malloc(sizeof(double*)*(*s2));
-	  printf("scond dimension created %d \n",*s2);
 	  for (int j=0; j<=l2; j++) {
-	    printf("Doing for j %d\n",j);
 	    if (j == l2) {
-	      double *tmp = (double *)malloc(sizeof(double));
-	      /*	      (*A)[l1][l2] = (double *)malloc(sizeof(double));*/
-	      printf("space created \n");
-	      /* *(*A)[i][j] = val; */
+	      (*A)[l1][l2] = (double *)malloc(sizeof(double));
+	      *(*A)[i][j] = val; 
 	    } else {
 	      (*A)[i][j] = NULL; 
 	    }
@@ -114,6 +106,21 @@ int insert(int l1, int l2, int *s1, int *s2, double val, double ****A) {
 }
 
 
+int print_jA(int s1, int s2, double ***A) {
+  //  printf("A is at: %p \n",(void*)A); 
+  for (int i=0; i<s1; i++) {
+    //    printf("A[%d] is at: %p \n",i,(void*)A[i]); 
+    if (A[i]) {
+      for (int j=0; j<s2; j++) {
+	//	printf("A[%d,%d] is at: %p \n",i,j,(void*)A[i][j]); 
+  	if (A[i][j]) {
+	  printf("A[%d,%d] is: %f \n",i,j,*(A[i][j]));
+	}
+      }
+    }
+  }
+}
+  
 
 int main(int argc, char const *argv[]) {
 
@@ -124,131 +131,24 @@ int main(int argc, char const *argv[]) {
 
   printf("\n2,3\n");
   insert(2,3,&s1,&s2,0.12345,&A);
-  printf("A is at: %p \n",(void*)A); 
-  for (int i=0; i<s1; i++) {
-    printf("A[%d] is at: %p \n",i,(void*)A[i]); 
-    if (A[i]) {
-      for (int j=0; j<s2; j++) {
-	printf("A[%d,%d] is at: %p \n",i,j,(void*)A[i][j]); 
-  	if (A[i][j]) {
-	  printf("A[%d,%d] is: %f \n",i,j,*(A[i][j]));
-	}
-      }
-    }
-  }
-  
+  print_jA(s1,s2,A);
+
   printf("\n2,3\n");
   insert(2,3,&s1,&s2,0.12345,&A);
-  printf("A is at: %p \n",(void*)A); 
-  for (int i=0; i<s1; i++) {
-    printf("A[%d] is at: %p \n",i,(void*)A[i]);
-    if (A[i]) {
-      for (int j=0; j<s2; j++) {
-  	printf("A[%d,%d] is at: %p \n",i,j,(void*)A[i][j]);
-  	if (A[i][j]) {
-	  printf("A[%d,%d] is: %f \n",i,j,*(A[i][j]));
-	}
-      }
-    }
-  }
+  print_jA(s1,s2,A);
 
   printf("\n2,2\n");
   insert(2,2,&s1,&s2,2.12345,&A);
-  printf("A is at: %p \n",(void*)A); 
-  for (int i=0; i<s1; i++) {
-    printf("A[%d] is at: %p \n",i,(void*)A[i]); 
-    if (A[i]) {
-      for (int j=0; j<s2; j++) {
-  	printf("A[%d,%d] is at: %p \n",i,j,(void*)A[i][j]); 
-  	if (A[i][j]) {
-	  printf("A[%d,%d] is: %f \n",i,j,*(A[i][j]));
-	}
-      }
-    }
-  }
-
+  print_jA(s1,s2,A);
 
   printf("\n2,4 \n");
   insert(2,4,&s1,&s2,21.2345,&A);
-  printf("A is at: %p \n",(void*)A); 
-  for (int i=0; i<s1; i++) {
-    printf("A[%d] is at: %p \n",i,(void*)A[i]); 
-    if (A[i]) {
-      for (int j=0; j<s2; j++) {
-  	printf("A[%d,%d] is at: %p \n",i,j,(void*)A[i][j]); 
-  	if (A[i][j]) {
-	  printf("A[%d,%d] is: %f \n",i,j,*(A[i][j]));
-	}
-      }
-    }
-  }
-
+  print_jA(s1,s2,A);
 
   printf("\n3,4 \n");
   insert(3,4,&s1,&s2,31.2345,&A);
-  printf("A is at: %p \n",(void*)A); 
-  for (int i=0; i<s1; i++) {
-    printf("A[%d] is at: %p \n",i,(void*)A[i]); 
-    if (A[i]) {
-      for (int j=0; j<s2; j++) {
-  	printf("A[%d,%d] is at: %p \n",i,j,(void*)A[i][j]); 
-  	if (A[i][j]) {
-	  printf("A[%d,%d] is: %f \n",i,j,*(A[i][j]));
-	}
-      }
-    }
-  }
-
+  print_jA(s1,s2,A);
   
-  /* A = (int **)malloc(sizeof(int *)*N); */
-  /*  */
-  /* for(int i=0; i<N; ++i){ */
-  /*   // A[i] = (int *)malloc(sizeof(int)*N); EQUIVALENT */
-  /*   *(A+i) = (int *)malloc(sizeof(int)*N); */
-  /* } */
-  /*  */
-  /* for(int i=0; i<N; ++i){ */
-  /*   for(int j=0; j<N; ++j){ */
-  /*     A[i][j] = count++; */
-  /*   } */
-  /* } */
-  /*  */
-  /* for(int i=0; i<N; ++i){ */
-  /*   for(int j=0; j<N; ++j){ */
-  /*     printf("%3d ", A[i][j]); */
-  /*   } */
-  /*   printf("\n"); */
-  /* } */
-
-  /* A = (int **)realloc(A, sizeof(int **)*M); */
-  /*  */
-  /* for(int i=0; i<N; ++i){ */
-  /*   *(A+i) = (int *)realloc(*(A+i), sizeof(int)*M); */
-  /* } */
-  /*  */
-  /* for(int i=N; i<M; ++i){ */
-  /*   *(A+i) = (int *)malloc(sizeof(int)*M); */
-  /* } */
-  /*  */
-  /* for(int i=0; i<N; ++i){ */
-  /*   for(int j=N; j<M; ++j){ */
-  /*     *(*(A+i)+j) = 0; */
-  /*   } */
-  /* } */
-  /*  */
-  /* for(int i=N; i<M; ++i){ */
-  /*   for(int j=0; j<M; ++j){ */
-  /*     *(*(A+i)+j) = 9; */
-  /*   } */
-  /* } */
-  /*  */
-  /* for(int i=0; i<M; ++i){ */
-  /*   for(int j=0; j<M; ++j){ */
-  /*     printf("%3d ", A[i][j]); */
-  /*   } */
-  /*   printf("\n"); */
-  /* } */
-
   return 0;
 }
 
