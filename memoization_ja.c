@@ -1,42 +1,38 @@
+/* Copyright (C) 2019 by Angel de Vicente, angel@iac.es 
+   https://github.com/angel-devicente/                     */
+
+/******************************************************************
+* Angel de Vicente 
+*
+* A simple program to perform memoization with dynamic jagged arrays
+* 
+******************************************************************
+* TO DO: 
+*   + add proper description
+*   + add error handling to code
+******************************************************************/
+
+
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
+#include <errno.h>
+#include "memoization_ja.h"
 
+#define STRINGIFY(x) #x
+#define TOSTRING(x) STRINGIFY(x)
+#define AT __FILE__ ":" TOSTRING(__LINE__)
+#define ERROR { fprintf(stderr, "ERROR at %s: %s\n", AT,strerror( errno )); exit(EXIT_FAILURE); }
 
-typedef struct strip1D {
-  int size;
-  double** s;
-} strip1D;
-
-typedef struct strip2D {
-  int size;
-  strip1D* s;
-} strip2D;
-
-typedef struct strip3D {
-  int size;
-  strip2D* s;
-} strip3D;
-
-typedef struct strip4D {
-  int size;
-  strip3D* s;
-} strip4D;
-
-typedef struct strip5D {
-  int size;
-  strip4D* s;
-} strip5D;
-
-typedef struct strip6D {
-  int size;
-  strip5D* s;
-} strip6D;
-
-
+/************************************************************** 
+*
+* Inserting functions for 1D-6D memoization jagged arrays 
+*
+**************************************************************/
 int place_val1D(int st, int l1, double val, strip1D *A) {
   for(int i=st; i<=l1; i++){
     if (i == l1) {
-      A->s[i] = (double *)malloc(sizeof(double));
+      if ( ! (A->s[i] = (double *)malloc(sizeof(double))) ) ERROR;
       *(A->s[i]) = val; 
     } else {
       A->s[i] = NULL;
@@ -46,30 +42,28 @@ int place_val1D(int st, int l1, double val, strip1D *A) {
 }
 
 int insert1D(int l1, double val, strip1D *A) {
+  double **tmp;
+  
   if (A->size > 0) {
     if (l1 < A->size) {
       if (A->s[l1]) {   // already stored, noop 
       } else {          // no link to value, adding  
-	A->s[l1] = (double *)malloc(sizeof(double));
+	if ( ! (A->s[l1] = (double *)malloc(sizeof(double))) ) ERROR;
 	*(A->s[l1]) = val;
       }
     } else {           // not big enough: realloc and place value
       int p_s1 = A->size;
       int s1 = l1+1;
       A->size = s1;
-      double **tmp = realloc(A->s,sizeof(double*)*(s1));
-      if(tmp) {
-	A->s=tmp;
-      } else {   
-	return 1;
-      }
+      if ( ! (tmp = realloc(A->s,sizeof(double*)*(s1))) ) ERROR;
+      A->s=tmp;
       place_val1D(p_s1,l1,val,A);
       
     }
   } else {            // dimension does not exist yet: create and place value
     int s1 = l1+1;
     A->size = s1;
-    A->s = (double**)malloc(sizeof(double*)*(s1));
+    if ( ! (A->s = (double**)malloc(sizeof(double*)*(s1))) ) ERROR;
     place_val1D(0,l1,val,A);
   }
 
@@ -78,6 +72,8 @@ int insert1D(int l1, double val, strip1D *A) {
 
 
 int insert2D(int l1, int l2, double val, strip2D *A) {
+  strip1D *tmp;
+  
   if (A->size > 0) {
     if (l1 < A->size) {
       insert1D(l2,val,&(A->s[l1]));
@@ -85,12 +81,8 @@ int insert2D(int l1, int l2, double val, strip2D *A) {
       int p_s1 = A->size;
       int s1 = l1+1;
       A->size = s1;
-      strip1D* tmp = realloc(A->s,sizeof(strip1D)*(s1));
-      if(tmp) {
-	A->s=tmp;
-      } else {
-	return 1;
-      }
+      if ( ! (tmp = realloc(A->s,sizeof(strip1D)*(s1))) ) ERROR;
+      A->s=tmp;
 
       for(int i=p_s1; i<=l1; i++){
 	(A->s[i]).size = 0;
@@ -101,7 +93,7 @@ int insert2D(int l1, int l2, double val, strip2D *A) {
   } else {            // dimension does not exist yet: create and place value
     int s1 = l1+1;
     A->size = s1;
-    A->s = (strip1D*)malloc(sizeof(strip1D)*(s1));
+    if ( ! (A->s = (strip1D*)malloc(sizeof(strip1D)*(s1)))) ERROR;
     for(int i=0; i<=l1; i++){
       A->s[i].size = 0;
     }
@@ -113,6 +105,8 @@ int insert2D(int l1, int l2, double val, strip2D *A) {
 
 
 int insert3D(int l1, int l2, int l3, double val, strip3D *A) {
+  strip2D *tmp;
+  
   if (A->size > 0) {
     if (l1 < A->size) {
       insert2D(l2,l3,val,&(A->s[l1]));
@@ -120,12 +114,8 @@ int insert3D(int l1, int l2, int l3, double val, strip3D *A) {
       int p_s1 = A->size;
       int s1 = l1+1;
       A->size = s1;
-      strip2D* tmp = realloc(A->s,sizeof(strip2D)*(s1));
-      if(tmp) {
-	A->s=tmp;
-      } else {
-	return 1;
-      }
+      if ( ! (tmp = realloc(A->s,sizeof(strip2D)*(s1))) ) ERROR;
+      A->s=tmp;
 
       for(int i=p_s1; i<=l1; i++){
 	(A->s[i]).size = 0;
@@ -136,7 +126,7 @@ int insert3D(int l1, int l2, int l3, double val, strip3D *A) {
   } else {            // dimension does not exist yet: create and place value
     int s1 = l1+1;
     A->size = s1;
-    A->s = (strip2D*)malloc(sizeof(strip2D)*(s1));
+    if ( ! (A->s = (strip2D*)malloc(sizeof(strip2D)*(s1))) ) ERROR;
     for(int i=0; i<=l1; i++){
       A->s[i].size = 0;
     }
@@ -148,6 +138,8 @@ int insert3D(int l1, int l2, int l3, double val, strip3D *A) {
 
 
 int insert4D(int l1, int l2, int l3, int l4, double val, strip4D *A) {
+  strip3D *tmp;
+  
   if (A->size > 0) {
     if (l1 < A->size) {
       insert3D(l2,l3,l4,val,&(A->s[l1]));
@@ -155,12 +147,8 @@ int insert4D(int l1, int l2, int l3, int l4, double val, strip4D *A) {
       int p_s1 = A->size;
       int s1 = l1+1;
       A->size = s1;
-      strip3D* tmp = realloc(A->s,sizeof(strip3D)*(s1));
-      if(tmp) {
-	A->s=tmp;
-      } else {
-	return 1;
-      }
+      if ( ! (tmp = realloc(A->s,sizeof(strip3D)*(s1))) ) ERROR;
+      A->s=tmp;
 
       for(int i=p_s1; i<=l1; i++){
 	(A->s[i]).size = 0;
@@ -171,7 +159,7 @@ int insert4D(int l1, int l2, int l3, int l4, double val, strip4D *A) {
   } else {            // dimension does not exist yet: create and place value
     int s1 = l1+1;
     A->size = s1;
-    A->s = (strip3D*)malloc(sizeof(strip3D)*(s1));
+    if ( ! (A->s = (strip3D*)malloc(sizeof(strip3D)*(s1))) ) ERROR;
     for(int i=0; i<=l1; i++){
       A->s[i].size = 0;
     }
@@ -183,6 +171,8 @@ int insert4D(int l1, int l2, int l3, int l4, double val, strip4D *A) {
 
 
 int insert5D(int l1, int l2, int l3, int l4, int l5, double val, strip5D *A) {
+  strip4D *tmp;
+  
   if (A->size > 0) {
     if (l1 < A->size) {
       insert4D(l2,l3,l4,l5,val,&(A->s[l1]));
@@ -190,12 +180,8 @@ int insert5D(int l1, int l2, int l3, int l4, int l5, double val, strip5D *A) {
       int p_s1 = A->size;
       int s1 = l1+1;
       A->size = s1;
-      strip4D* tmp = realloc(A->s,sizeof(strip4D)*(s1));
-      if(tmp) {
-	A->s=tmp;
-      } else {
-	return 1;
-      }
+      if ( ! (tmp = realloc(A->s,sizeof(strip4D)*(s1))) ) ERROR;
+      A->s=tmp;
 
       for(int i=p_s1; i<=l1; i++){
 	(A->s[i]).size = 0;
@@ -206,7 +192,7 @@ int insert5D(int l1, int l2, int l3, int l4, int l5, double val, strip5D *A) {
   } else {            // dimension does not exist yet: create and place value
     int s1 = l1+1;
     A->size = s1;
-    A->s = (strip4D*)malloc(sizeof(strip4D)*(s1));
+    if ( ! (A->s = (strip4D*)malloc(sizeof(strip4D)*(s1))) ) ERROR;
     for(int i=0; i<=l1; i++){
       A->s[i].size = 0;
     }
@@ -218,6 +204,8 @@ int insert5D(int l1, int l2, int l3, int l4, int l5, double val, strip5D *A) {
 
 
 int insert6D(int l1, int l2, int l3, int l4, int l5, int l6, double val, strip6D *A) {
+  strip5D *tmp;
+  
   if (A->size > 0) {
     if (l1 < A->size) {
       insert5D(l2,l3,l4,l5,l6,val,&(A->s[l1]));
@@ -225,12 +213,8 @@ int insert6D(int l1, int l2, int l3, int l4, int l5, int l6, double val, strip6D
       int p_s1 = A->size;
       int s1 = l1+1;
       A->size = s1;
-      strip5D* tmp = realloc(A->s,sizeof(strip5D)*(s1));
-      if(tmp) {
-	A->s=tmp;
-      } else {
-	return 1;
-      }
+      if ( ! (tmp = realloc(A->s,sizeof(strip5D)*(s1))) ) ERROR;
+      A->s=tmp;
 
       for(int i=p_s1; i<=l1; i++){
 	(A->s[i]).size = 0;
@@ -241,7 +225,7 @@ int insert6D(int l1, int l2, int l3, int l4, int l5, int l6, double val, strip6D
   } else {            // dimension does not exist yet: create and place value
     int s1 = l1+1;
     A->size = s1;
-    A->s = (strip5D*)malloc(sizeof(strip5D)*(s1));
+    if ( ! (A->s = (strip5D*)malloc(sizeof(strip5D)*(s1))) ) ERROR;
     for(int i=0; i<=l1; i++){
       A->s[i].size = 0;
     }
@@ -252,25 +236,35 @@ int insert6D(int l1, int l2, int l3, int l4, int l5, int l6, double val, strip6D
 }
 
 
-int present6D(int l1,int l2,int l3,int l4,int l5,int l6,strip6D A) {
+/************************************************************** 
+*
+* Searching function for 6D memoization jagged arrays 
+*
+* Returns: NULL if element not in Jagged_Array.
+*          Pointer to value if present in Jagged_Array
+*
+* TODO: my main goal was a 6D jagged array, so for the moment 
+* I only wrote the searching for 6Ds, but it is trivial to
+* write the 1D-5D versions.
+**************************************************************/
+double* elem6D(int l1,int l2,int l3,int l4,int l5,int l6,strip6D A) {
   if (A.size > l1 &&
       A.s[l1].size > l2 &&
       A.s[l1].s[l2].size > l3 &&
       A.s[l1].s[l2].s[l3].size > l4 &&
       A.s[l1].s[l2].s[l3].s[l4].size > l5 &&
-      A.s[l1].s[l2].s[l3].s[l4].s[l5].size > l6 &&
-      A.s[l1].s[l2].s[l3].s[l4].s[l5].s[l6]) {
-    return 1;
-      } else {
-    return 0;
-      }
-}
+      A.s[l1].s[l2].s[l3].s[l4].s[l5].size > l6)
+    return A.s[l1].s[l2].s[l3].s[l4].s[l5].s[l6];
 
-double elem6D(int l1,int l2,int l3,int l4,int l5,int l6,strip6D A) {
-  return *(A.s[l1].s[l2].s[l3].s[l4].s[l5].s[l6]);
+  return NULL;
 }
 
 
+/************************************************************** 
+*
+* Basic printing functions for 1D-6D memoization jagged arrays 
+*
+**************************************************************/
 int print_jA1D(strip1D A) {
   printf("----------- \n"); 
   for (int i=0; i<A.size; i++) {
@@ -278,6 +272,7 @@ int print_jA1D(strip1D A) {
       printf("A[%d] is: %f \n",i,*(A.s[i]));
     }
   }
+  return 0;
 }
 
 
@@ -290,6 +285,7 @@ int print_jA2D(strip2D A) {
       }
     }
   }
+  return 0;
 }
 
 
@@ -304,6 +300,7 @@ int print_jA3D(strip3D A) {
       }
     }
   }
+  return 0;
 }
 
 
@@ -320,6 +317,7 @@ int print_jA4D(strip4D A) {
       }
     }
   }
+  return 0;
 }
 
 int print_jA5D(strip5D A) {
@@ -337,6 +335,7 @@ int print_jA5D(strip5D A) {
       }
     }
   }
+  return 0;
 }
 
 
@@ -357,157 +356,10 @@ int print_jA6D(strip6D A) {
       }
     }
   }
-}
-
-
-int main(int argc, char const *argv[]) {
-
-  printf("\n\nTesting 1D \n");
-  printf("========== \n");
-  strip1D A1D; A1D.size = 0;
-
-  insert1D(2,2.0,&A1D);
-  print_jA1D(A1D);
-
-  insert1D(1,1.0,&A1D);
-  print_jA1D(A1D);
-
-  insert1D(2,2.0,&A1D);
-  print_jA1D(A1D);
-
-  insert1D(5,5.0,&A1D);
-  print_jA1D(A1D);
-
-  insert1D(5,5.0,&A1D);
-  print_jA1D(A1D);
-
-  insert1D(7,7.0,&A1D);
-  print_jA1D(A1D);
-  
-  
-  printf("\n\nTesting 2D \n");
-  printf("========== \n");
-  strip2D A2D; A2D.size = 0;
-  
-  insert2D(2,3,2.3,&A2D);
-  print_jA2D(A2D);
-
-  insert2D(2,2,2.2,&A2D);
-  print_jA2D(A2D);
-
-  insert2D(2,4,2.4,&A2D);
-  print_jA2D(A2D);
-
-  insert2D(3,4,3.4,&A2D);
-  print_jA2D(A2D);
-
-
-  printf("\n\nTesting 3D \n");
-  printf("========== \n");
-  strip3D A3D; A3D.size = 0;
-  
-  insert3D(2,3,4,2.34,&A3D);
-  print_jA3D(A3D);
-
-  insert3D(2,3,5,2.35,&A3D);
-  print_jA3D(A3D);
-  
-  insert3D(2,1,5,2.15,&A3D);
-  print_jA3D(A3D);
-  
-  insert3D(1,1,5,1.15,&A3D);
-  print_jA3D(A3D);
-  
-  insert3D(1,1,5,1.15,&A3D);
-  print_jA3D(A3D);
-  
-  insert3D(3,1,5,3.15,&A3D);
-  print_jA3D(A3D);
-
-
-  printf("\n\nTesting 4D \n");
-  printf("========== \n");
-  strip4D A4D; A4D.size = 0;
-  
-  insert4D(2,3,4,8,2.34,&A4D);
-  print_jA4D(A4D);
-
-  insert4D(2,3,5,7,2.35,&A4D);
-  print_jA4D(A4D);
-  
-  insert4D(6,2,1,5,2.15,&A4D);
-  print_jA4D(A4D);
-  
-  insert4D(5,1,1,5,1.15,&A4D);
-  print_jA4D(A4D);
-  
-  insert4D(1,9,5,5,1.15,&A4D);
-  print_jA4D(A4D);
-  
-  insert4D(3,10,5,4,3.15,&A4D);
-  print_jA4D(A4D);
-
-
-  printf("\n\nTesting 5D \n");
-  printf("========== \n");
-  strip5D A5D; A5D.size = 0;
-  
-  insert5D(2,3,2,4,8,2.34,&A5D);
-  print_jA5D(A5D);
-
-  insert5D(2,3,5,8,7,2.35,&A5D);
-  print_jA5D(A5D);
-  
-  insert5D(4,6,2,1,5,2.15,&A5D);
-  print_jA5D(A5D);
-  
-  insert5D(9,5,1,1,5,1.15,&A5D);
-  print_jA5D(A5D);
-  
-  insert5D(12,1,9,5,5,1.15,&A5D);
-  print_jA5D(A5D);
-  
-  insert5D(1,3,10,5,4,3.15,&A5D);
-  print_jA5D(A5D);
-
-
-  printf("\n\nTesting 6D \n");
-  printf("========== \n");
-  strip6D A6D; A6D.size = 0;
-  
-  insert6D(1,2,3,2,4,8,2.34,&A6D);
-  print_jA6D(A6D);
-
-  insert6D(3,2,3,5,8,7,2.35,&A6D);
-  print_jA6D(A6D);
-  
-  insert6D(4,6,8,2,1,5,2.15,&A6D);
-  print_jA6D(A6D);
-  
-  insert6D(9,15,1,1,5,2,1.15,&A6D);
-  print_jA6D(A6D);
-  
-  insert6D(12,13,9,5,5,20,1.15,&A6D);
-  print_jA6D(A6D);
-  
-  insert6D(1,3,1,5,40,2,3.15,&A6D);
-  print_jA6D(A6D);
-
-
-  printf("\n Testing search functions in 6D \n");
-  printf("Testing: 1,3,1,5,40,2\n");
-  if (present6D(1,3,1,5,40,2,A6D)) printf("%f \n",elem6D(1,3,1,5,40,2,A6D));
-
-  printf("Testing: 3,3,1,5,40,2\n");
-  if (present6D(3,3,1,5,40,2,A6D)) printf("%f \n",elem6D(3,3,1,5,40,2,A6D));
-
-  printf("Testing: 1,2,3,2,4,8\n");
-  if (present6D(1,2,3,2,4,8,A6D)) printf("%f \n",elem6D(1,2,3,2,4,8,A6D));
-
-
-  
   return 0;
 }
+
+
 
 
 
