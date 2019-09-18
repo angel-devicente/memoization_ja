@@ -39,13 +39,20 @@ int insert4D(int l1, int l2, int l3, int l4, double val, strip4D *A);
 int insert5D(int l1, int l2, int l3, int l4, int l5, double val, strip5D *A);
 int insert6D(int l1, int l2, int l3, int l4, int l5, int l6, double val, strip6D *A);
 
-double* elem6D(int l1,int l2,int l3,int l4,int l5,int l6,strip6D A);
-
 int print_jA1D(strip1D A);
 int print_jA2D(strip2D A);
 int print_jA3D(strip3D A);
 int print_jA4D(strip4D A);
 int print_jA5D(strip5D A);
 int print_jA6D(strip6D A);
+
+int mem_free_1D(strip1D *A);
+int mem_free_2D(strip2D *A);
+int mem_free_3D(strip3D *A);
+int mem_free_4D(strip4D *A);
+int mem_free_5D(strip5D *A);
+int mem_free_6D(strip6D *A);
+
+double* elem6D(int l1,int l2,int l3,int l4,int l5,int l6,strip6D A);
 
 #endif

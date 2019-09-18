@@ -85,7 +85,8 @@ int insert2D(int l1, int l2, double val, strip2D *A) {
       A->s=tmp;
 
       for(int i=p_s1; i<=l1; i++){
-	(A->s[i]).size = 0;
+	A->s[i].size = 0;
+	A->s[i].s = NULL;
       }
       insert1D(l2,val,&(A->s[l1]));
 
@@ -96,6 +97,7 @@ int insert2D(int l1, int l2, double val, strip2D *A) {
     if ( ! (A->s = (strip1D*)malloc(sizeof(strip1D)*(s1)))) ERROR;
     for(int i=0; i<=l1; i++){
       A->s[i].size = 0;
+      A->s[i].s = NULL;
     }
     insert1D(l2,val,&(A->s[l1]));
   }
@@ -118,7 +120,8 @@ int insert3D(int l1, int l2, int l3, double val, strip3D *A) {
       A->s=tmp;
 
       for(int i=p_s1; i<=l1; i++){
-	(A->s[i]).size = 0;
+	A->s[i].size = 0;
+	A->s[i].s = NULL;
       }
       insert2D(l2,l3,val,&(A->s[l1]));
 
@@ -129,6 +132,7 @@ int insert3D(int l1, int l2, int l3, double val, strip3D *A) {
     if ( ! (A->s = (strip2D*)malloc(sizeof(strip2D)*(s1))) ) ERROR;
     for(int i=0; i<=l1; i++){
       A->s[i].size = 0;
+      A->s[i].s = NULL;
     }
     insert2D(l2,l3,val,&(A->s[l1]));
   }
@@ -151,7 +155,8 @@ int insert4D(int l1, int l2, int l3, int l4, double val, strip4D *A) {
       A->s=tmp;
 
       for(int i=p_s1; i<=l1; i++){
-	(A->s[i]).size = 0;
+	A->s[i].size = 0;
+	A->s[i].s = NULL;
       }
       insert3D(l2,l3,l4,val,&(A->s[l1]));
 
@@ -162,6 +167,7 @@ int insert4D(int l1, int l2, int l3, int l4, double val, strip4D *A) {
     if ( ! (A->s = (strip3D*)malloc(sizeof(strip3D)*(s1))) ) ERROR;
     for(int i=0; i<=l1; i++){
       A->s[i].size = 0;
+      A->s[i].s = NULL;
     }
     insert3D(l2,l3,l4,val,&(A->s[l1]));
   }
@@ -184,7 +190,8 @@ int insert5D(int l1, int l2, int l3, int l4, int l5, double val, strip5D *A) {
       A->s=tmp;
 
       for(int i=p_s1; i<=l1; i++){
-	(A->s[i]).size = 0;
+	A->s[i].size = 0;
+	A->s[i].s = NULL;
       }
       insert4D(l2,l3,l4,l5,val,&(A->s[l1]));
 
@@ -195,6 +202,7 @@ int insert5D(int l1, int l2, int l3, int l4, int l5, double val, strip5D *A) {
     if ( ! (A->s = (strip4D*)malloc(sizeof(strip4D)*(s1))) ) ERROR;
     for(int i=0; i<=l1; i++){
       A->s[i].size = 0;
+      A->s[i].s = NULL;
     }
     insert4D(l2,l3,l4,l5,val,&(A->s[l1]));
   }
@@ -217,7 +225,8 @@ int insert6D(int l1, int l2, int l3, int l4, int l5, int l6, double val, strip6D
       A->s=tmp;
 
       for(int i=p_s1; i<=l1; i++){
-	(A->s[i]).size = 0;
+	A->s[i].size = 0;
+	A->s[i].s = NULL;
       }
       insert5D(l2,l3,l4,l5,l6,val,&(A->s[l1]));
 
@@ -228,35 +237,12 @@ int insert6D(int l1, int l2, int l3, int l4, int l5, int l6, double val, strip6D
     if ( ! (A->s = (strip5D*)malloc(sizeof(strip5D)*(s1))) ) ERROR;
     for(int i=0; i<=l1; i++){
       A->s[i].size = 0;
+      A->s[i].s = NULL;
     }
     insert5D(l2,l3,l4,l5,l6,val,&(A->s[l1]));
   }
 
   return 0;
-}
-
-
-/************************************************************** 
-*
-* Searching function for 6D memoization jagged arrays 
-*
-* Returns: NULL if element not in Jagged_Array.
-*          Pointer to value if present in Jagged_Array
-*
-* TODO: my main goal was a 6D jagged array, so for the moment 
-* I only wrote the searching for 6Ds, but it is trivial to
-* write the 1D-5D versions.
-**************************************************************/
-double* elem6D(int l1,int l2,int l3,int l4,int l5,int l6,strip6D A) {
-  if (A.size > l1 &&
-      A.s[l1].size > l2 &&
-      A.s[l1].s[l2].size > l3 &&
-      A.s[l1].s[l2].s[l3].size > l4 &&
-      A.s[l1].s[l2].s[l3].s[l4].size > l5 &&
-      A.s[l1].s[l2].s[l3].s[l4].s[l5].size > l6)
-    return A.s[l1].s[l2].s[l3].s[l4].s[l5].s[l6];
-
-  return NULL;
 }
 
 
@@ -359,7 +345,86 @@ int print_jA6D(strip6D A) {
   return 0;
 }
 
+/************************************************************** 
+*
+* Freeing memory functions for 1D-6D memoization jagged arrays 
+*
+**************************************************************/
+
+int mem_free_1D(strip1D *A) {
+  for (int i=0; i < A->size; i++) if (A->s[i]) free(A->s[i]);
+  if (A->s) {
+    free(A->s);
+    A->s = NULL;
+  }
+  return 0;
+}
+
+int mem_free_2D(strip2D *A) {
+  for (int i=0; i < A->size; i++) mem_free_1D(&(A->s[i]));
+  if (A->s) {
+    free(A->s);
+    A->s = NULL;
+  }
+  return 0;
+}
+
+int mem_free_3D(strip3D *A) {
+  for (int i=0; i < A->size; i++) mem_free_2D(&(A->s[i]));
+  if (A->s) {
+    free(A->s);
+    A->s = NULL;
+  }
+  return 0;
+}
+
+int mem_free_4D(strip4D *A) {
+  for (int i=0; i < A->size; i++) mem_free_3D(&(A->s[i]));
+  if (A->s) {
+    free(A->s);
+    A->s = NULL;
+  }
+  return 0;
+}
+
+int mem_free_5D(strip5D *A) {
+  for (int i=0; i < A->size; i++) mem_free_4D(&(A->s[i]));
+  if (A->s) {
+    free(A->s);
+    A->s = NULL;
+  }
+  return 0;
+}
+
+int mem_free_6D(strip6D *A) {
+  for (int i=0; i < A->size; i++) mem_free_5D(&(A->s[i]));
+  if (A->s) {
+    free(A->s);
+    A->s = NULL;
+  }
+  return 0;
+}
 
 
+/************************************************************** 
+*
+* Searching function for 6D memoization jagged arrays 
+*
+* Returns: NULL if element not in Jagged_Array.
+*          Pointer to value if present in Jagged_Array
+*
+* TODO: my main goal was a 6D jagged array, so for the moment 
+* I only wrote the searching for 6Ds, but it is trivial to
+* write the 1D-5D versions.
+**************************************************************/
+double* elem6D(int l1,int l2,int l3,int l4,int l5,int l6,strip6D A) {
+  if (A.size > l1 &&
+      A.s[l1].size > l2 &&
+      A.s[l1].s[l2].size > l3 &&
+      A.s[l1].s[l2].s[l3].size > l4 &&
+      A.s[l1].s[l2].s[l3].s[l4].size > l5 &&
+      A.s[l1].s[l2].s[l3].s[l4].s[l5].size > l6)
+    return A.s[l1].s[l2].s[l3].s[l4].s[l5].s[l6];
 
-
+  return NULL;
+}
