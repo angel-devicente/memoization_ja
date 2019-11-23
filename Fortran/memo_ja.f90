@@ -78,12 +78,12 @@ program memo_ja
   print*, ""
   
   do rv=1,nvals
-     call random_number(lr) ; l1 = FLOOR(lr*maxc)
-     call random_number(lr) ; l2 = FLOOR(lr*maxc)
-     call random_number(lr) ; l3 = FLOOR(lr*maxc)
-     call random_number(lr) ; l4 = FLOOR(lr*maxc)
-     call random_number(lr) ; l5 = FLOOR(lr*maxc)
-     call random_number(lr) ; l6 = FLOOR(lr*maxc)
+     call random_number(lr) ; l1 = FLOOR(lr*(maxc+1))
+     call random_number(lr) ; l2 = FLOOR(lr*(maxc+1))
+     call random_number(lr) ; l3 = FLOOR(lr*(maxc+1))
+     call random_number(lr) ; l4 = FLOOR(lr*(maxc+1))
+     call random_number(lr) ; l5 = FLOOR(lr*(maxc+1))
+     call random_number(lr) ; l6 = FLOOR(lr*(maxc+1))
      call random_number(v)
 
      if (d == 1) write(*,'(A,F9.6,A,6I2)') "Inserting val: ",v," at positions: ",l1,l2,l3,l4,l5,l6
@@ -100,12 +100,12 @@ program memo_ja
   print*, ""
 
   do rv=1,nsearch
-     call random_number(lr) ; l1 = FLOOR(lr*maxc)
-     call random_number(lr) ; l2 = FLOOR(lr*maxc)
-     call random_number(lr) ; l3 = FLOOR(lr*maxc)
-     call random_number(lr) ; l4 = FLOOR(lr*maxc)
-     call random_number(lr) ; l5 = FLOOR(lr*maxc)
-     call random_number(lr) ; l6 = FLOOR(lr*maxc)
+     call random_number(lr) ; l1 = FLOOR(lr*(maxc+1))
+     call random_number(lr) ; l2 = FLOOR(lr*(maxc+1))
+     call random_number(lr) ; l3 = FLOOR(lr*(maxc+1))
+     call random_number(lr) ; l4 = FLOOR(lr*(maxc+1))
+     call random_number(lr) ; l5 = FLOOR(lr*(maxc+1))
+     call random_number(lr) ; l6 = FLOOR(lr*(maxc+1))
      call random_number(v)
     
      if (d == 1) write(*,'(A,6I2)') "Checking position: ",l1,l2,l3,l4,l5,l6
