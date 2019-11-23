@@ -1,15 +1,15 @@
 
 # Table of Contents
 
-1.  [Memoization with Jagged Arrays](#orgb71ba91)
-    1.  [Compilation of test code](#orgc12ca41)
-        1.  [C version](#orgad2462a)
-        2.  [Fortran version](#orgb3c2364)
-    2.  [Usage](#org7b42d44)
+1.  [Memoization with Jagged Arrays](#org3ec9244)
+    1.  [Compilation of test code](#org397856b)
+        1.  [C version](#org9e820b5)
+        2.  [Fortran version](#org7d97f9f)
+    2.  [Usage](#org46cf52d)
 
 
 
-<a id="orgb71ba91"></a>
+<a id="org3ec9244"></a>
 
 # Memoization with Jagged Arrays
 
@@ -28,19 +28,19 @@ point.
 (graphical explanation of the building up of the jagged array to be added)
 
 
-<a id="orgc12ca41"></a>
+<a id="org397856b"></a>
 
 ## Compilation of test code
 
 There are C and Fortran versions:
 
 
-<a id="orgad2462a"></a>
+<a id="org9e820b5"></a>
 
 ### C version
 
 The actual code that does the memoization and that can be adapted to arrays of
-more than 6D is in \`memoization\\\_ja.c\` and \`memoization\\\_ja.h\`. \`memo\\\_ja.c\` is
+more than 6D is in \`memoization\_ja.c\` and \`memoization\_ja.h\`. \`memo\_ja.c\` is
 just a simple code to test the memoization insertion and searching routines.
 
 To compile the code just do:
@@ -51,12 +51,12 @@ To compile the code just do:
     gcc  memoization_ja.o  memo_ja.o -Wall -lm -o memo_ja
 
 
-<a id="orgb3c2364"></a>
+<a id="org7d97f9f"></a>
 
 ### Fortran version
 
 The actual code that does the memoization and that can be adapted to arrays of
-more than 6D is in \`memoization\\\_ja.f90\`. \`memo\\\_ja.f90\` is
+more than 6D is in \`memoization\_ja.f90\`. \`memo\_ja.f90\` is
 just a simple code to test the memoization insertion and searching routines.
 
 To compile the code just do:
@@ -65,7 +65,7 @@ To compile the code just do:
     gfortran -Wall -O3 getopt.f90 memoization_ja.f90 memo_ja.f90 -o memo_ja
 
 
-<a id="org7b42d44"></a>
+<a id="org46cf52d"></a>
 
 ## Usage
 

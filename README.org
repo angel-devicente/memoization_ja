@@ -23,7 +23,7 @@ There are C and Fortran versions:
 *** C version
 
 The actual code that does the memoization and that can be adapted to arrays of
-more than 6D is in `memoization\_ja.c` and `memoization\_ja.h`. `memo\_ja.c` is
+more than 6D is in `memoization_ja.c` and `memoization_ja.h`. `memo_ja.c` is
 just a simple code to test the memoization insertion and searching routines.
 
 To compile the code just do:
@@ -38,7 +38,7 @@ gcc  memoization_ja.o  memo_ja.o -Wall -lm -o memo_ja
 *** Fortran version
 
 The actual code that does the memoization and that can be adapted to arrays of
-more than 6D is in `memoization\_ja.f90`. `memo\_ja.f90` is
+more than 6D is in `memoization_ja.f90`. `memo_ja.f90` is
 just a simple code to test the memoization insertion and searching routines.
 
 To compile the code just do:
