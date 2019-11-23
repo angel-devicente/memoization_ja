@@ -1,14 +1,15 @@
 
 # Table of Contents
 
-1.  [Memoization with Jagged Arrays](#orgb498dd4)
-    1.  [Compilation of test code](#org8d38b3f)
-        1.  [C version](#org158d6d4)
-        2.  [Fortran version](#org67afd5f)
-    2.  [Usage](#orgea007e2)
+1.  [Memoization with Jagged Arrays](#orgb71ba91)
+    1.  [Compilation of test code](#orgc12ca41)
+        1.  [C version](#orgad2462a)
+        2.  [Fortran version](#orgb3c2364)
+    2.  [Usage](#org7b42d44)
 
 
-<a id="orgb498dd4"></a>
+
+<a id="orgb71ba91"></a>
 
 # Memoization with Jagged Arrays
 
@@ -27,44 +28,44 @@ point.
 (graphical explanation of the building up of the jagged array to be added)
 
 
-<a id="org8d38b3f"></a>
+<a id="orgc12ca41"></a>
 
 ## Compilation of test code
 
 There are C and Fortran versions:
 
 
-<a id="org158d6d4"></a>
+<a id="orgad2462a"></a>
 
 ### C version
 
 The actual code that does the memoization and that can be adapted to arrays of
-more than 6D is in \`memoization\\<sub>ja.c</sub>\` and \`memoization\\<sub>ja.h</sub>\`. \`memo\\<sub>ja.c</sub>\` is
+more than 6D is in \`memoization\\\_ja.c\` and \`memoization\\\_ja.h\`. \`memo\\\_ja.c\` is
 just a simple code to test the memoization insertion and searching routines.
 
 To compile the code just do:
 
     $ make
-    gcc -g -Wall -c memoization_ja.c -o memoization_ja.o
-    gcc -g -Wall -c memo_ja.c -o memo_ja.o
+    gcc -Wall -O3 -c memoization_ja.c -o memoization_ja.o
+    gcc -Wall -O3 -c memo_ja.c -o memo_ja.o
     gcc  memoization_ja.o  memo_ja.o -Wall -lm -o memo_ja
 
 
-<a id="org67afd5f"></a>
+<a id="orgb3c2364"></a>
 
 ### Fortran version
 
 The actual code that does the memoization and that can be adapted to arrays of
-more than 6D is in \`memoization\\<sub>ja.f90</sub>\`. \`memo\\<sub>ja.f90</sub>\` is
+more than 6D is in \`memoization\\\_ja.f90\`. \`memo\\\_ja.f90\` is
 just a simple code to test the memoization insertion and searching routines.
 
 To compile the code just do:
 
     $ make
-    gfortran -g -Wall -fbacktrace getopt.f90 memoization_ja.f90 memo_ja.f90 -o memo_ja
+    gfortran -Wall -O3 getopt.f90 memoization_ja.f90 memo_ja.f90 -o memo_ja
 
 
-<a id="orgea007e2"></a>
+<a id="org7b42d44"></a>
 
 ## Usage
 
@@ -130,7 +131,7 @@ where each dimension has size 31 [0-30], we insert 100 values at random
 positions in it, and then search for 1e6 elements in it. In my machine,
 searching for this 1 million random positions in the array takes 0.47 seconds,
 and the memory needed for it is only a few kilobytes, as opposed to the nearly
-7GB that the full 31<sup>6</sup> array would take.
+7GB that the full 31^6 array would take.
 
     $ ./memo_ja -n 100 -w 30 -s 1000000
     

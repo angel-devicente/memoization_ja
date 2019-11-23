@@ -1,3 +1,5 @@
+#+OPTIONS: ^:nil
+
 * Memoization with Jagged Arrays
 
 Memoization is a useful technique in many codes, but an efficient implementation
@@ -28,8 +30,8 @@ To compile the code just do:
 
 #+BEGIN_SRC bash 
 $ make
-gcc -g -Wall -c memoization_ja.c -o memoization_ja.o
-gcc -g -Wall -c memo_ja.c -o memo_ja.o
+gcc -Wall -O3 -c memoization_ja.c -o memoization_ja.o
+gcc -Wall -O3 -c memo_ja.c -o memo_ja.o
 gcc  memoization_ja.o  memo_ja.o -Wall -lm -o memo_ja
 #+END_SRC
 
@@ -43,7 +45,7 @@ To compile the code just do:
 
 #+BEGIN_SRC bash 
 $ make
-gfortran -g -Wall -fbacktrace getopt.f90 memoization_ja.f90 memo_ja.f90 -o memo_ja
+gfortran -Wall -O3 getopt.f90 memoization_ja.f90 memo_ja.f90 -o memo_ja
 #+END_SRC
 
 

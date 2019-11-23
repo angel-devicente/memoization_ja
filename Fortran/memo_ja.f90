@@ -39,8 +39,11 @@ program memo_ja
   character :: opt 
 
   !==================================================================
-  
-  
+
+  ! Initialize Jagged Array
+  nullify(A%d)
+
+  ! Read command line arguments
   do
      opt = getopt("hdn:w:s:")
      select case(opt)
@@ -70,7 +73,8 @@ program memo_ja
   write(*,'(A)') NEW_LINE('A')//'Testing 6D memoization with Jagged Arrays'
   write(*,'(A)') "=========================================="
 
-  write(*,'(A,I0,A,I0,A)') "Inserting ",nvals," random values in random positions of the array (max dimension value: ",maxc,")"
+  write(*,'(A,I0,A,I0,A)') "Inserting ",nvals, &
+       " random values in random positions of the array (max dimension value: ",maxc,")"
   print*, ""
   
   do rv=1,nvals
@@ -91,7 +95,8 @@ program memo_ja
      end if
   end do
    
-  write(*,'(A,I0,A,I0,A)') NEW_LINE('A')//"Checking for ",nsearch," random positions of the array (max dimension value: ",maxc,")"
+  write(*,'(A,I0,A,I0,A)') NEW_LINE('A')//"Checking for ",nsearch, &
+       " random positions of the array (max dimension value: ",maxc,")"
   print*, ""
 
   do rv=1,nsearch
@@ -114,7 +119,8 @@ program memo_ja
   end do
  
 
-  write(*,'(I0,A,I0,A,F9.6,A)') nsearch," positions searched in a 6D array of size ", maxc," in ", tt*1.0/count_rate," seconds"
+  if (nsearch > 0) write(*,'(I0,A,I0,A,F9.6,A)') nsearch," positions searched in a 6D array of size ", &
+       maxc," in ", tt*1.0/count_rate," seconds"
 
 
 end program memo_ja

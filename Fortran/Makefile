@@ -1,6 +1,6 @@
 TARGET = memo_ja
 FC = gfortran
-FFLAGS = -Wall -O1
+FFLAGS = -Wall -O3
 
 .PHONY: default all clean
 
