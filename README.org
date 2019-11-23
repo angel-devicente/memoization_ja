@@ -16,8 +16,12 @@ point.
 
 ** Compilation of test code
 
-The actual code that does the memoization and that can be adapted to arrays or
-more than 6D is in `memoization_ja.c` and `memoization_ja.h`. `memo_ja.c` is
+There are C and Fortran versions:
+
+*** C version
+
+The actual code that does the memoization and that can be adapted to arrays of
+more than 6D is in `memoization\_ja.c` and `memoization\_ja.h`. `memo\_ja.c` is
 just a simple code to test the memoization insertion and searching routines.
 
 To compile the code just do:
@@ -28,6 +32,20 @@ gcc -g -Wall -c memoization_ja.c -o memoization_ja.o
 gcc -g -Wall -c memo_ja.c -o memo_ja.o
 gcc  memoization_ja.o  memo_ja.o -Wall -lm -o memo_ja
 #+END_SRC
+
+*** Fortran version
+
+The actual code that does the memoization and that can be adapted to arrays of
+more than 6D is in `memoization\_ja.f90`. `memo\_ja.f90` is
+just a simple code to test the memoization insertion and searching routines.
+
+To compile the code just do:
+
+#+BEGIN_SRC bash 
+$ make
+gfortran -g -Wall -fbacktrace getopt.f90 memoization_ja.f90 memo_ja.f90 -o memo_ja
+#+END_SRC
+
 
 ** Usage
 

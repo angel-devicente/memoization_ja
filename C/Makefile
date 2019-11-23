@@ -1,7 +1,7 @@
 TARGET = memo_ja
 LIBS = -lm
 CC = gcc
-CFLAGS = -g -Wall
+CFLAGS = -Wall -O3
 
 .PHONY: default all clean
 
