@@ -1,4 +1,4 @@
-!!$ Copyright (C) 2019 by Angel de Vicente, angel@iac.es 
+!!$ Copyright (C) 2019 by Angel de Vicente, angel.de.vicente@iac.es 
 !!$    https://github.com/angel-devicente/                     
 !!$
 !!$ ******************************************************************

@@ -1,4 +1,4 @@
-/* Copyright (C) 2019 by Angel de Vicente, angel@iac.es 
+/* Copyright (C) 2019 by Angel de Vicente, angel.de.vicente@iac.es 
    https://github.com/angel-devicente/                     */
 
 /******************************************************************
@@ -15,6 +15,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <time.h>
+#include <limits.h>
 #include "memoization_ja.h"
 
 int main(int argc, char *argv[]) {
@@ -24,13 +25,15 @@ int main(int argc, char *argv[]) {
 
   // jagged array, plus initialization.
   // val pointer to result of search in array
-  strip6D A6D; A6D.size = 0; 
+  //  strip6D A6D; A6D.size = 0;
+  strip6D A;
+  A.min = INT_MAX; A.max = INT_MIN; A.s = NULL; A.s0 = NULL;
   double* val;
 
   // command line argument default values 
   int nvals=1000;
   int nsearch=1000;
-  int maxc=40;
+  int maxc=20;
   int d=0;
 
   // timing
@@ -54,7 +57,7 @@ int main(int argc, char *argv[]) {
       fprintf(stderr, "  -h         : displays this help\n");
       fprintf(stderr, "  -d         : debug mode (will print all insertions, info on searches and state of the array)\n");
       fprintf(stderr, "  -n nvals   : nvals (default=1000) is the number of values to add to the array\n");
-      fprintf(stderr, "  -w maxc    : maxc (default=40) is the maximum length of each of the array dimensions\n");
+      fprintf(stderr, "  -w maxc    : maxc (default=20) is the maximum positive index value for each dimension (i.e. indices can go from -maxc:maxc\n");
       fprintf(stderr, "  -s nsearch : nsearch (default=1000) is the number of elements to search for in the array\n");
       exit(EXIT_FAILURE);
     }
@@ -70,19 +73,21 @@ int main(int argc, char *argv[]) {
   printf("Inserting %d random values in random positions of the array (max dimension value: %d)\n\n",nvals,maxc);
 
   for (int rv=0 ; rv < nvals ; rv++) {
-    l1 = rand() % (maxc+1);
-    l2 = rand() % (maxc+1);
-    l3 = rand() % (maxc+1);
-    l4 = rand() % (maxc+1);
-    l5 = rand() % (maxc+1);
-    l6 = rand() % (maxc+1);
+    l1 = (rand() % (2*maxc+1)) - maxc; 
+    l2 = (rand() % (2*maxc+1)) - maxc;
+    l3 = (rand() % (2*maxc+1)) - maxc;
+    l4 = (rand() % (2*maxc+1)) - maxc;
+    l5 = (rand() % (2*maxc+1)) - maxc;
+    l6 = (rand() % (2*maxc+1)) - maxc;
     v = drand48();
     
-    if (d) printf("Inserting val: %f at positions: %d %d %d %d %d %d\n",v,l1,l2,l3,l4,l5,l6);     
-    insert6D(l1,l2,l3,l4,l5,l6,v,&A6D);
+    if (d) printf("Inserting val: %f at positions: %d %d %d %d %d %d\n",v,l1,l2,l3,l4,l5,l6);
+    //    if (d) printf("Inserting val: %f at positions: %d %d %d\n",v,l1,l2,l3);
+    insert6D(l1,l2,l3,l4,l5,l6,v,&A);
+    // insert3D(l1,l2,l3,v,&A);
     if (d) {
       printf("Jagged array:\n"); 
-      print_jA6D(A6D);
+      print_jA6D(A);
       printf("\n\n"); 
     }
   }
@@ -91,18 +96,20 @@ int main(int argc, char *argv[]) {
   printf("Checking for %d random positions of the array (max dimension value: %d)\n\n",nsearch,maxc);
   
   for (int rv=0 ; rv < nsearch ; rv++) {
-    l1 = rand() % (maxc+1);
-    l2 = rand() % (maxc+1);
-    l3 = rand() % (maxc+1);
-    l4 = rand() % (maxc+1);
-    l5 = rand() % (maxc+1);
-    l6 = rand() % (maxc+1);
+    l1 = (rand() % (2*maxc+1)) - maxc;
+    l2 = (rand() % (2*maxc+1)) - maxc;
+    l3 = (rand() % (2*maxc+1)) - maxc;
+    l4 = (rand() % (2*maxc+1)) - maxc;
+    l5 = (rand() % (2*maxc+1)) - maxc;
+    l6 = (rand() % (2*maxc+1)) - maxc;
     v = drand48();
     
     if (d) printf("Checking position: %d %d %d %d %d %d \n",l1,l2,l3,l4,l5,l6);
+    //if (d) printf("Checking position: %d %d %d\n",l1,l2,l3);
 
     t1 = clock();
-    val = elem6D(l1,l2,l3,l4,l5,l6,A6D);
+    val = elem6D(l1,l2,l3,l4,l5,l6,A);
+    //val = elem3D(l1,l2,l3,A);
     t2 = clock();
     cpu_time += (t2-t1);
 
