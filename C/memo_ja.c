@@ -25,7 +25,6 @@ int main(int argc, char *argv[]) {
 
   // jagged array, plus initialization.
   // val pointer to result of search in array
-  //  strip6D A6D; A6D.size = 0;
   strip6D A;
   A.min = INT_MAX; A.max = INT_MIN; A.s = NULL; A.s0 = NULL;
   double* val;
@@ -82,9 +81,7 @@ int main(int argc, char *argv[]) {
     v = drand48();
     
     if (d) printf("Inserting val: %f at positions: %d %d %d %d %d %d\n",v,l1,l2,l3,l4,l5,l6);
-    //    if (d) printf("Inserting val: %f at positions: %d %d %d\n",v,l1,l2,l3);
     insert6D(l1,l2,l3,l4,l5,l6,v,&A);
-    // insert3D(l1,l2,l3,v,&A);
     if (d) {
       printf("Jagged array:\n"); 
       print_jA6D(A);
@@ -105,19 +102,19 @@ int main(int argc, char *argv[]) {
     v = drand48();
     
     if (d) printf("Checking position: %d %d %d %d %d %d \n",l1,l2,l3,l4,l5,l6);
-    //if (d) printf("Checking position: %d %d %d\n",l1,l2,l3);
 
     t1 = clock();
     val = elem6D(l1,l2,l3,l4,l5,l6,A);
-    //val = elem3D(l1,l2,l3,A);
     t2 = clock();
     cpu_time += (t2-t1);
 
     if (d && val) printf("%f \n",*val); 
   }
 
-  printf("%d positions searched in a 6D array of size %d in %f seconds\n",nsearch,maxc,((double)cpu_time)/CLOCKS_PER_SEC);
+  printf("%d positions searched (see README.md for notes) in a 6D array of size %d in %f seconds\n",nsearch,maxc,((double)cpu_time)/CLOCKS_PER_SEC);
 
+  mem_free_6D(&A);
+    
   return 0;
 }
 

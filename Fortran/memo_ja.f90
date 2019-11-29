@@ -21,7 +21,7 @@ program memo_ja
   real :: lr
   double precision :: v
 
-  ! A6D: jagged array
+  ! A:   jagged array
   ! val: pointer to result of search in array
   type(a6D) :: A
   double precision, pointer :: val
@@ -78,16 +78,17 @@ program memo_ja
   print*, ""
   
   do rv=1,nvals
-     call random_number(lr) ; l1 = FLOOR(lr*(maxc+1))
-     call random_number(lr) ; l2 = FLOOR(lr*(maxc+1))
-     call random_number(lr) ; l3 = FLOOR(lr*(maxc+1))
-     call random_number(lr) ; l4 = FLOOR(lr*(maxc+1))
-     call random_number(lr) ; l5 = FLOOR(lr*(maxc+1))
-     call random_number(lr) ; l6 = FLOOR(lr*(maxc+1))
+     call random_number(lr) ; l1 = FLOOR(lr*(2*maxc+1)) - maxc
+     call random_number(lr) ; l2 = FLOOR(lr*(2*maxc+1)) - maxc
+     call random_number(lr) ; l3 = FLOOR(lr*(2*maxc+1)) - maxc
+     call random_number(lr) ; l4 = FLOOR(lr*(2*maxc+1)) - maxc
+     call random_number(lr) ; l5 = FLOOR(lr*(2*maxc+1)) - maxc
+     call random_number(lr) ; l6 = FLOOR(lr*(2*maxc+1)) - maxc
      call random_number(v)
 
      if (d == 1) write(*,'(A,F9.6,A,6I2)') "Inserting val: ",v," at positions: ",l1,l2,l3,l4,l5,l6
      call insert6D(l1,l2,l3,l4,l5,l6,v,A);
+
      if (d == 1) then
         write(*,*) "Jagged array:"
         call print_jA6D(A)
@@ -100,12 +101,12 @@ program memo_ja
   print*, ""
 
   do rv=1,nsearch
-     call random_number(lr) ; l1 = FLOOR(lr*(maxc+1))
-     call random_number(lr) ; l2 = FLOOR(lr*(maxc+1))
-     call random_number(lr) ; l3 = FLOOR(lr*(maxc+1))
-     call random_number(lr) ; l4 = FLOOR(lr*(maxc+1))
-     call random_number(lr) ; l5 = FLOOR(lr*(maxc+1))
-     call random_number(lr) ; l6 = FLOOR(lr*(maxc+1))
+     call random_number(lr) ; l1 = FLOOR(lr*(2*maxc+1)) - maxc
+     call random_number(lr) ; l2 = FLOOR(lr*(2*maxc+1)) - maxc
+     call random_number(lr) ; l3 = FLOOR(lr*(2*maxc+1)) - maxc
+     call random_number(lr) ; l4 = FLOOR(lr*(2*maxc+1)) - maxc
+     call random_number(lr) ; l5 = FLOOR(lr*(2*maxc+1)) - maxc
+     call random_number(lr) ; l6 = FLOOR(lr*(2*maxc+1)) - maxc
      call random_number(v)
     
      if (d == 1) write(*,'(A,6I2)') "Checking position: ",l1,l2,l3,l4,l5,l6
@@ -114,13 +115,13 @@ program memo_ja
      val => elem6D(l1,l2,l3,l4,l5,l6,A);
      call system_clock(t2, count_rate, count_max)
      tt = tt + (t2-t1)
-     
+
      if (d == 1 .and. associated(val)) print*, val
   end do
- 
 
-  if (nsearch > 0) write(*,'(I0,A,I0,A,F9.6,A)') nsearch," positions searched in a 6D array of size ", &
+  if (nsearch > 0) write(*,'(I0,A,I0,A,F9.6,A)') nsearch," positions searched (see README.md for notes) in a 6D array of size ", &
        maxc," in ", tt*1.0/count_rate," seconds"
 
+  call mem_free_6D()
 
 end program memo_ja
