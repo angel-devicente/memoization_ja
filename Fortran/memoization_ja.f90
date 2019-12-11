@@ -486,6 +486,7 @@ contains
     double precision, pointer :: elem1D
 
     nullify(elem1D)
+    if (.not. associated(A%d)) return
     if ((l1 >= lbound(A%d,1)) .and. (l1 <= ubound(A%d,1))) elem1d => A%d(l1)%d
   end function elem1D
 
@@ -496,7 +497,8 @@ contains
     double precision, pointer :: elem2D
     
     nullify(elem2D)
-    if ((l1 >= lbound(A%d,1)) .and. (l1 <= ubound(A%d,1)) .and. associated(A%d(l1)%d)) elem2D => elem1D(l2,A%d(l1))
+    if (.not. associated(A%d)) return
+    if ((l1 >= lbound(A%d,1)) .and. (l1 <= ubound(A%d,1))) elem2D => elem1D(l2,A%d(l1))
   end function elem2D
 
   function elem3D(l1,l2,l3,A)
@@ -505,7 +507,8 @@ contains
     double precision, pointer :: elem3D
     
     nullify(elem3D)
-    if ((l1 >= lbound(A%d,1)) .and. (l1 <= ubound(A%d,1)) .and. associated(A%d(l1)%d)) elem3D => elem2D(l2,l3,A%d(l1))
+    if (.not. associated(A%d)) return
+    if ((l1 >= lbound(A%d,1)) .and. (l1 <= ubound(A%d,1))) elem3D => elem2D(l2,l3,A%d(l1))
   end function elem3D
 
   function elem4D(l1,l2,l3,l4,A)
@@ -514,7 +517,8 @@ contains
     double precision, pointer :: elem4D
     
     nullify(elem4D)
-    if ((l1 >= lbound(A%d,1)) .and. (l1 <= ubound(A%d,1)) .and. associated(A%d(l1)%d)) elem4D => elem3D(l2,l3,l4,A%d(l1))
+    if (.not. associated(A%d)) return
+    if ((l1 >= lbound(A%d,1)) .and. (l1 <= ubound(A%d,1))) elem4D => elem3D(l2,l3,l4,A%d(l1))
   end function elem4D
 
   function elem5D(l1,l2,l3,l4,l5,A)
@@ -523,7 +527,8 @@ contains
     double precision, pointer :: elem5D
     
     nullify(elem5D)
-    if ((l1 >= lbound(A%d,1)) .and. (l1 <= ubound(A%d,1)) .and. associated(A%d(l1)%d)) elem5D => elem4D(l2,l3,l4,l5,A%d(l1))
+    if (.not. associated(A%d)) return
+    if ((l1 >= lbound(A%d,1)) .and. (l1 <= ubound(A%d,1))) elem5D => elem4D(l2,l3,l4,l5,A%d(l1))
   end function elem5D
 
   function elem6D(l1,l2,l3,l4,l5,l6,A)
@@ -533,9 +538,7 @@ contains
     
     nullify(elem6D)
     if (.not. associated(A%d)) return 
-    
-    if ((l1 >= lbound(A%d,1)) .and. (l1 <= ubound(A%d,1)) .and. &
-         associated(A%d(l1)%d)) elem6D => elem5D(l2,l3,l4,l5,l6,A%d(l1))
+    if ((l1 >= lbound(A%d,1)) .and. (l1 <= ubound(A%d,1))) elem6D => elem5D(l2,l3,l4,l5,l6,A%d(l1))
   end function elem6D
   
   
