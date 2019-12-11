@@ -532,7 +532,10 @@ contains
     double precision, pointer :: elem6D
     
     nullify(elem6D)
-    if ((l1 >= lbound(A%d,1)) .and. (l1 <= ubound(A%d,1)) .and. associated(A%d(l1)%d)) elem6D => elem5D(l2,l3,l4,l5,l6,A%d(l1))
+    if (.not. associated(A%d)) return 
+    
+    if ((l1 >= lbound(A%d,1)) .and. (l1 <= ubound(A%d,1)) .and. &
+         associated(A%d(l1)%d)) elem6D => elem5D(l2,l3,l4,l5,l6,A%d(l1))
   end function elem6D
   
   

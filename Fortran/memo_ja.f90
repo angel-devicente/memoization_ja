@@ -73,6 +73,26 @@ program memo_ja
   write(*,'(A)') NEW_LINE('A')//'Testing 6D memoization with Jagged Arrays'
   write(*,'(A)') "=========================================="
 
+
+  write(*,'(A,I0,A,I0,A)') NEW_LINE('A')//"Checking (before inserting any values) for ",nsearch, &
+       " random positions of the array (max dimension value: ",maxc,")"
+  print*, ""
+
+  do rv=1,nsearch
+     call random_number(lr) ; l1 = FLOOR(lr*(2*maxc+1)) - maxc
+     call random_number(lr) ; l2 = FLOOR(lr*(2*maxc+1)) - maxc
+     call random_number(lr) ; l3 = FLOOR(lr*(2*maxc+1)) - maxc
+     call random_number(lr) ; l4 = FLOOR(lr*(2*maxc+1)) - maxc
+     call random_number(lr) ; l5 = FLOOR(lr*(2*maxc+1)) - maxc
+     call random_number(lr) ; l6 = FLOOR(lr*(2*maxc+1)) - maxc
+     call random_number(v)
+    
+     if (d == 1) write(*,'(A,6I2)') "Checking position: ",l1,l2,l3,l4,l5,l6
+     val => elem6D(l1,l2,l3,l4,l5,l6,A);
+     if (d == 1 .and. associated(val)) print*, val
+  end do
+
+  
   write(*,'(A,I0,A,I0,A)') "Inserting ",nvals, &
        " random values in random positions of the array (max dimension value: ",maxc,")"
   print*, ""
